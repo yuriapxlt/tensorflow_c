@@ -29,8 +29,6 @@ azel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
     /bazel/installer.sh  && \
     rm -rf /bazel
 
-COPY . /tfc
-WORKDIR /tfc
-
-RUN bazel build //...
-RUN bazel test //...
+RUN useradd -rm -d /home/tensorflow -s /bin/bash -g root -G sudo -u 1000 tensorflow
+USER tensorflow
+WORKDIR /home/tensorflow
