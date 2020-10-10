@@ -6,3 +6,18 @@ http_archive(
      urls = ["https://github.com/google/googletest/archive/{}.zip".format(googletest_version)],
      strip_prefix = "googletest-{}".format(googletest_version),
 )
+
+new_local_repository(
+    name = "opt_tensorflow",
+    path = "/opt/libtensorflow",
+    build_file_content = 
+"""
+cc_library(
+    name = "tensorflow",
+    srcs = glob(["lib/**/*.so*"]),
+    hdrs = glob(["include/**/*.h*"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
+""",
+)

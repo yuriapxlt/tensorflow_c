@@ -1,5 +1,4 @@
-ARG BASE=ubuntu:20.04
-FROM ${BASE}
+FROM yuriapxlt/tensorflow:1.15.2
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -29,6 +28,6 @@ azel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
     /bazel/installer.sh  && \
     rm -rf /bazel
 
-RUN useradd -rm -d /home/tensorflow -s /bin/bash -g root -G sudo -u 1000 tensorflow
-USER tensorflow
-WORKDIR /home/tensorflow
+RUN useradd -ms /bin/bash user
+USER user
+WORKDIR /home/user
