@@ -16,18 +16,17 @@ namespace tfc
 const char* version();
 std::vector<uint8_t> gpu_fraction(double fraction);
 
-class Tensor;
-class Session;
+class session;
 
-class Tensor {
+class tensor {
 public:
-    friend class Session;
-    Tensor(const Session& session, const std::string& operation);
-    Tensor(const Tensor &tensor) = delete;
-    Tensor(Tensor &&tensor) = default;
-    Tensor& operator=(const Tensor &tensor) = delete;
-    Tensor& operator=(Tensor &&tensor) = default;
-    ~Tensor();
+    friend class session;
+    tensor(const session& pb, const std::string& operation);
+    tensor(const tensor& tensor) = delete;
+    tensor(tensor&& tensor) = default;
+    tensor& operator=(const tensor& tensor) = delete;
+    tensor& operator=(tensor&& tensor) = default;
+    ~tensor();
     void clean();
     template<typename T> void set_data(std::vector<T> new_data);
     template<typename T> void set_data(std::vector<T> new_data, const std::vector<int64_t>& new_shape);
@@ -45,35 +44,35 @@ private:
     template <typename T> static TF_DataType deduce_type();
     void deduce_shape();
 };
+typedef std::shared_ptr<tensor> tensor_ptr;
 
-class Session {
+class session {
 public:
-    friend class Tensor;
-    explicit Session(const std::string& session_filename, const std::vector<uint8_t>& config_options = {});
-    Session(const Session &session) = delete;
-    Session(Session &&session) = default;
-    Session& operator=(const Session &session) = delete;
-    Session& operator=(Session &&session) = default;
-    ~Session();
-    void init();
-    void restore(const std::string& ckpt);
-    void save(const std::string& ckpt);
+    friend class tensor;
+    explicit session(const std::string& pb_filename, const std::vector<uint8_t>& config_options = {});
+    session(const session& pb) = delete;
+    session(session&& pb) = default;
+    session& operator=(const session& pb) = delete;
+    session& operator=(session&& pb) = default;
+    ~session();
+    void open();
     std::vector<std::string> get_operations() const;
-    void run(const std::vector<Tensor*>& inputs, const std::vector<Tensor*>& outputs);
-    void run(Tensor& input, const std::vector<Tensor*>& outputs);
-    void run(const std::vector<Tensor*>& inputs, Tensor& output);
-    void run(Tensor& input, Tensor& output);
-    void run(Tensor* input, const std::vector<Tensor*>& outputs);
-    void run(const std::vector<Tensor*>& inputs, Tensor* output);
-    void run(Tensor* input, Tensor* output);
+    void process(const std::vector<tensor*>& inputs, const std::vector<tensor*>& outputs);
+    void process(tensor& input, const std::vector<tensor*>& outputs);
+    void process(const std::vector<tensor*>& inputs, tensor& output);
+    void process(tensor& input, tensor& output);
+    void process(tensor* input, const std::vector<tensor*>& outputs);
+    void process(const std::vector<tensor*>& inputs, tensor* output);
+    void process(tensor* input, tensor* output);
 private:
     TF_Graph* graph;
-    TF_Session* session;
+    TF_Session* pb;
     TF_Status* status;
     static TF_Buffer* read(const std::string& filename);
     bool status_check(bool throw_exc) const;
     void error_check(bool condition, const std::string &error) const;
 };
+typedef std::shared_ptr<session> session_ptr;
 
 }
 

@@ -1,8 +1,8 @@
 import tensorflow as tf
 
 def example():
-    a = tf.placeholder(tf.float32, shape=(1, 100), name="input_a")
-    b = tf.placeholder(tf.float32, shape=(1, 100), name="input_b")
+    a = tf.placeholder(tf.float32, shape=(1, 10), name="input_a")
+    b = tf.placeholder(tf.float32, shape=(1, 10), name="input_b")
     c = tf.add(a, b, name='result')
     i = tf.initializers.global_variables()
     with open('session.pb', 'wb') as f:
