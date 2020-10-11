@@ -1,3 +1,6 @@
 bazel-*
 *.md
 !README.md
+*.dockerfile
+*.pb
+!session.pb
