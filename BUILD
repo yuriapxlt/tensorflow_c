@@ -14,6 +14,8 @@ cc_library(
     ],    
 )
 
+exports_files(["session.pb"], visibility = ["//visibility:public"],)
+
 filegroup(
     name = "session_pb",
     visibility = ["//visibility:public"],
