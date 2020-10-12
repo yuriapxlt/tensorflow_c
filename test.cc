@@ -3,30 +3,25 @@
 #include <iomanip>
 #include <gtest/gtest.h>
 #include <tensorflow/c/c_api.h>
-#include "tfc.h"
+#include "tensorflow_c/api.h"
 
-namespace tf = ::tfc;
+namespace tf = ::tensorflow_c;
 
-TEST(tfc, tensorflow)
+TEST(tensorflow_c, version)
 {
-    ASSERT_STREQ(TF_Version(), "1.15.2");
+    ASSERT_STREQ(tf::version(), TF_Version());
 }
 
-TEST(tfc, version)
+TEST(tensorflow_c, gpu_fraction)
 {
-    ASSERT_STREQ(tf::version(), "0.3");
+    ASSERT_THROW(tf::gpu_fraction(0.), std::runtime_error);
+    ASSERT_THROW(tf::gpu_fraction(-0.1), std::runtime_error);
+    ASSERT_THROW(tf::gpu_fraction(1.), std::runtime_error);
+    ASSERT_THROW(tf::gpu_fraction(1.1), std::runtime_error);
+    for (float f = 0.1; f < 1.; f += 0.1) ASSERT_NO_THROW(tf::gpu_fraction(f));
 }
 
-TEST(tfc, gpu_fraction)
-{
-    ASSERT_THROW(tfc::gpu_fraction(0.), std::runtime_error);
-    ASSERT_THROW(tfc::gpu_fraction(-0.1), std::runtime_error);
-    ASSERT_THROW(tfc::gpu_fraction(1.), std::runtime_error);
-    ASSERT_THROW(tfc::gpu_fraction(1.1), std::runtime_error);
-    for (float f = 0.1; f < 1.; f += 0.1) ASSERT_NO_THROW(tfc::gpu_fraction(f));
-}
-
-TEST(tfc, session)
+TEST(tensorflow_c, session)
 {
     tf::session pb("session.pb");
     pb.init();
@@ -45,7 +40,7 @@ TEST(tfc, session)
     for (float f: result.get_data<float>()) ASSERT_FLOAT_EQ(f, 2 * i++);
 }
 
-TEST(tfc, shared_ptr)
+TEST(tensorflow_c, shared_ptr)
 {
     tf::session_ptr pb = std::make_shared<tf::session>("session.pb");
     pb->init();

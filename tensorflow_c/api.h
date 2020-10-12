@@ -1,5 +1,5 @@
-#ifndef __TFC_H__
-#define __TFC_H__
+#ifndef __TENSORFLOW_C_API_H__
+#define __TENSORFLOW_C_API_H__
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,7 @@
 #include <cstring>
 #include <tensorflow/c/c_api.h>
 
-namespace tfc
+namespace tensorflow_c
 {
 
 const char* version();
@@ -18,7 +18,8 @@ std::vector<uint8_t> gpu_fraction(double fraction);
 
 class session;
 
-class tensor {
+class tensor 
+{
 public:
     friend class session;
     tensor(const session& pb, const std::string& operation);
@@ -46,7 +47,8 @@ private:
 };
 typedef std::shared_ptr<tensor> tensor_ptr;
 
-class session {
+class session 
+{
 public:
     friend class tensor;
     explicit session(const std::string& pb_filename, const std::vector<uint8_t>& config_options = {});

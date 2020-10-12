@@ -1,19 +1,5 @@
 package(default_visibility = ["//visibility:public"])
 
-cc_library(
-    name = "tfc",
-    visibility = ["//visibility:public"],
-    srcs = [
-        "tfc.cc",
-    ],
-    hdrs = [
-        "tfc.h"
-    ],
-    deps = [
-        "@opt_tensorflow//:tensorflow",
-    ],    
-)
-
 filegroup(
     name = "session_pb",
     visibility = ["//visibility:public"],
@@ -27,24 +13,16 @@ cc_test(
     deps = [
         "@opt_tensorflow//:tensorflow",
         "@com_google_googletest//:gtest_main",
-        ":tfc",
+        "//tensorflow_c:api",
     ],
-    data = [
-        ":session_pb",
-    ],
+    data = [":session_pb"],
 )
 
 cc_binary(
     name = "example",
     visibility = ["//visibility:public"],
-    srcs = [
-        "example.cc",
-    ],
+    srcs = ["example.cc"],
     copts = [],
-    deps = [
-        ":tfc"
-    ],
-    data = [
-        ":session_pb",
-    ],
+    deps = ["//tensorflow_c:api"],
+    data = [":session_pb"],
 )
