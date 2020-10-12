@@ -14,7 +14,7 @@ TEST(tfc, tensorflow)
 
 TEST(tfc, version)
 {
-    ASSERT_STREQ(tf::version(), "0.1");
+    ASSERT_STREQ(tf::version(), "0.3");
 }
 
 TEST(tfc, gpu_fraction)
