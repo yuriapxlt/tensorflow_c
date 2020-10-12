@@ -55,7 +55,7 @@ public:
     session& operator=(const session& pb) = delete;
     session& operator=(session&& pb) = default;
     ~session();
-    void open();
+    void init();
     std::vector<std::string> get_operations() const;
     void process(const std::vector<tensor*>& inputs, const std::vector<tensor*>& outputs);
     void process(tensor& input, const std::vector<tensor*>& outputs);

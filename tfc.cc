@@ -226,7 +226,7 @@ session::~session()
     TF_DeleteStatus(this->status);
 }
 
-void session::open() 
+void session::init() 
 {
     TF_Operation* init_op[1] = {TF_GraphOperationByName(this->graph, "init")};
     this->error_check(init_op[0]!= nullptr, "no operation named \"init\" exists");

@@ -29,7 +29,7 @@ TEST(tfc, gpu_fraction)
 TEST(tfc, session)
 {
     tf::session pb("session.pb");
-    pb.open();
+    pb.init();
     tf::tensor input_a{pb, "input_a"};
     tf::tensor input_b{pb, "input_b"};
     tf::tensor result{pb, "result"};
@@ -48,7 +48,7 @@ TEST(tfc, session)
 TEST(tfc, shared_ptr)
 {
     tf::session_ptr pb = std::make_shared<tf::session>("session.pb");
-    pb->open();
+    pb->init();
     tf::tensor_ptr input_a = std::make_shared<tf::tensor>(*pb, "input_a");
     tf::tensor_ptr input_b = std::make_shared<tf::tensor>(*pb, "input_b");
     tf::tensor_ptr result = std::make_shared<tf::tensor>(*pb, "result");

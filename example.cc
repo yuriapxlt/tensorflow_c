@@ -8,7 +8,8 @@ namespace tf = ::tfc;
 int main(int argc, char* argv[]) 
 {
     tf::session pb("session.pb");
-    pb.open();
+    std::cout << std::endl;
+    pb.init();
     tf::tensor input_a{pb, "input_a"};
     tf::tensor input_b{pb, "input_b"};
     tf::tensor result{pb, "result"};
@@ -21,9 +22,9 @@ int main(int argc, char* argv[])
         for (auto d : t.get_data<float>()) os << d << " ";
         return os.str();
     };
-    std::cout << std::endl << "input_a [ " << out(input_a) << "]" << std::endl;
-    std::cout << std::endl << "input_b [ " << out(input_b) << "]" << std::endl;
+    std::cout << "input_a [ " << out(input_a) << "]" << std::endl;
+    std::cout << "input_b [ " << out(input_b) << "]" << std::endl;
     pb.process({&input_a, &input_b}, result);
-    std::cout << std::endl << "result [ " << out(result) << "]" << std::endl;
+    std::cout << "result [ " << out(result) << "]" << std::endl;
     return 0;
 }
