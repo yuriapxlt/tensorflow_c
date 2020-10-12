@@ -6,11 +6,11 @@
 :
 
 8
-input_bPlaceholder*
+input_bPlaceholder*
+dtype0*
 shape
 :
-*
-dtype0
+
 (
 resultAddinput_ainput_b*
 T0
