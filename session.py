@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def example():
+def session():
     a = tf.placeholder(tf.float32, shape=(1, 10), name="input_a")
     b = tf.placeholder(tf.float32, shape=(1, 10), name="input_b")
     c = tf.add(a, b, name='result')
@@ -9,4 +9,4 @@ def example():
         f.write(tf.get_default_graph().as_graph_def().SerializeToString())
 
 if __name__ == "__main__":
-    example()
+    session()

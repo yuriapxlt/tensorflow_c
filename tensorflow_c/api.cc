@@ -33,7 +33,7 @@ tensor::tensor(const session& pb, const std::string& operation)
     this->type = TF_OperationOutputType(this->op);
     if (n_dims > 0) 
     {
-        auto *dims = new int64_t[n_dims];
+        auto* dims = new int64_t[n_dims];
         TF_GraphGetTensorShape(pb.graph, this->op, dims, n_dims, pb.status);
         pb.status_check(true);
         this->shape = std::vector<int64_t>(dims, dims + n_dims);
@@ -59,11 +59,11 @@ void tensor::clean()
     this->data = nullptr;
 }
 
-void  tensor::error_check(bool condition, const std::string &error) 
+void tensor::error_check(bool condition, const std::string &error) 
 {
     if (condition) return;
     this->flag = -1;
-    throw std::runtime_error(error);
+    tensorflow_c::error_check(condition, error);
 }
 
 template<typename T> void tensor::set_data(std::vector<T> new_data) 
@@ -112,7 +112,7 @@ template<typename T> std::vector<T> tensor::get_data()
 
 std::vector<int64_t> tensor::get_shape() 
 {
-	return shape;
+    return shape;
 }
 
 template<typename T> TF_DataType tensor::deduce_type() 
@@ -268,25 +268,27 @@ std::vector<std::string> session::get_operations() const
 
 void session::process(const std::vector<tensor*>& inputs, const std::vector<tensor*>& outputs) 
 {
-    this->error_check(std::all_of(inputs.begin(), inputs.end(), [](const tensor* i){return i->flag == 1;}),  "invalid input tensors");
-    this->error_check(std::all_of(outputs.begin(), outputs.end(), [](const tensor* o){return o->flag != -1;}), "invalid output tensors");
+    this->error_check(std::all_of(inputs.begin(), inputs.end(), [](const tensor* t){return t != nullptr;}),  "invalid input tensors");
+    this->error_check(std::all_of(inputs.begin(), inputs.end(), [](const tensor* t){return t->flag == 1;}),  "invalid input tensors");
+    this->error_check(std::all_of(outputs.begin(), outputs.end(), [](const tensor* t){return t != nullptr;}),  "invalid output tensors");
+    this->error_check(std::all_of(outputs.begin(), outputs.end(), [](const tensor* t){return t->flag != -1;}), "invalid output tensors");
     std::for_each(outputs.begin(), outputs.end(), [](tensor* o){o->clean();});
     std::vector<TF_Output> io(inputs.size());
-    std::transform(inputs.begin(), inputs.end(), io.begin(), [](const tensor* i) {return i->op;});
+    std::transform(inputs.begin(), inputs.end(), io.begin(), [](const tensor* t) {return t->op;});
     std::vector<TF_Tensor*> iv(inputs.size());
-    std::transform(inputs.begin(), inputs.end(), iv.begin(), [](const tensor* i) {return i->val;});
+    std::transform(inputs.begin(), inputs.end(), iv.begin(), [](const tensor* t) {return t->val;});
     std::vector<TF_Output> oo(outputs.size());
-    std::transform(outputs.begin(), outputs.end(), oo.begin(), [](const tensor* o) {return o->op;});
+    std::transform(outputs.begin(), outputs.end(), oo.begin(), [](const tensor* t) {return t->op;});
     auto ov = new TF_Tensor*[outputs.size()];
     TF_SessionRun(this->pb, nullptr, io.data(), iv.data(), inputs.size(), oo.data(), ov, outputs.size(), nullptr, 0, nullptr, this->status);
     this->status_check(true);
-    for (std::size_t i=0; i<outputs.size(); i++) 
+    for (std::size_t i = 0; i < outputs.size(); i++) 
     {
         outputs[i]->val = ov[i];
         outputs[i]->flag = 1;
         outputs[i]->deduce_shape();
     }
-    std::for_each(inputs.begin(), inputs.end(), [] (tensor* i) {i->clean();});
+    std::for_each(inputs.begin(), inputs.end(), [] (tensor* t) {t->clean();});
     delete[] ov;
 }
 
@@ -329,7 +331,7 @@ bool session::status_check(bool throw_exc) const
 
 void session::error_check(bool condition, const std::string &error) const 
 {
-    if (!condition) throw std::runtime_error(error);
+    tensorflow_c::error_check(condition, error);
 }
 
 }
