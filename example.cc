@@ -1,9 +1,9 @@
-#include "tfc.h"
+#include "tensorflow_c/api.h"
 #include <iostream>
 #include <numeric>
 #include <iomanip>
 
-namespace tf = ::tfc;
+namespace tf = ::tensorflow_c;
 
 int main(int argc, char* argv[]) 
 {

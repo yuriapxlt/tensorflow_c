@@ -1,13 +1,13 @@
-#include "tfc.h"
+#include "tensorflow_c/api.h"
 #include <fstream>
 #include <utility>
 
-namespace tfc
+namespace tensorflow_c
 {
 
 const char* version() 
 {
-    return "0.3";
+    return TF_Version();
 }
 
 void error_check(bool condition, const std::string& error) 
