@@ -7,28 +7,24 @@ namespace tf = ::tfc;
 
 int main(int argc, char* argv[]) 
 {
-    tf::Session session("session.pb");
-    session.init();
-
-    tf::Tensor input_a{session, "input_a"};
-    tf::Tensor input_b{session, "input_b"};
-    tf::Tensor result{session, "result"};
-
-    std::vector<float> data(100);
-    std::iota(data.begin(), data.end(), 0);
-
+    tf::session pb("session.pb");
+    std::cout << std::endl;
+    pb.init();
+    tf::tensor input_a{pb, "input_a"};
+    tf::tensor input_b{pb, "input_b"};
+    tf::tensor result{pb, "result"};
+    std::vector<float> data(10);
+    std::iota(data.begin(), data.end(), 1);
     input_a.set_data(data);
     input_b.set_data(data);
-
-    session.run({&input_a, &input_b}, result);
-
-    std::cout << std::endl;
-    int i(0);
-    for (float f : result.get_data<float>()) {
-        std::cout << "\t" << f;
-        if (!(++i % 10)) std::cout << std::endl;
-    }
-    std::cout << std::endl;
-
+    auto out = [](tf::tensor& t) { 
+        std::ostringstream os; 
+        for (auto d : t.get_data<float>()) os << d << " ";
+        return os.str();
+    };
+    std::cout << "input_a [ " << out(input_a) << "]" << std::endl;
+    std::cout << "input_b [ " << out(input_b) << "]" << std::endl;
+    pb.process({&input_a, &input_b}, result);
+    std::cout << "result [ " << out(result) << "]" << std::endl;
     return 0;
 }

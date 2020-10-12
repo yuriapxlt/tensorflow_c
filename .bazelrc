@@ -1,2 +1,2 @@
 build -c opt --cxxopt='-std=c++14'  
-test --test_output=all 
+test --test_output=all --cache_test_results=no --jobs=1
