@@ -7,7 +7,7 @@ namespace tfc
 
 const char* version() 
 {
-    return "0.1";
+    return "0.3";
 }
 
 void error_check(bool condition, const std::string& error) 
