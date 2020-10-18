@@ -3,6 +3,8 @@
 ```bash
 bazel build //...
 bazel test //...
-python example.py
-bazel run //:example
+python session.py
+bazel run //:session
+python model.py
+bazel run //:model
 ```

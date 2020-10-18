@@ -6,6 +6,12 @@ filegroup(
     srcs = ["session.pb"]
 )
 
+filegroup(
+    name = "model_pb",
+    visibility = ["//visibility:public"],
+    srcs = ["model.pb"]
+)
+
 cc_test(
     name = "test",
     visibility = ["//visibility:public"],
@@ -15,14 +21,26 @@ cc_test(
         "@com_google_googletest//:gtest_main",
         "//tensorflow_c:api",
     ],
+    data = [
+        ":session_pb",
+        ":model_pb",
+    ],
+)
+
+cc_binary(
+    name = "session",
+    visibility = ["//visibility:public"],
+    srcs = ["session.cc"],
+    copts = [],
+    deps = ["//tensorflow_c:api"],
     data = [":session_pb"],
 )
 
 cc_binary(
-    name = "example",
+    name = "model",
     visibility = ["//visibility:public"],
-    srcs = ["example.cc"],
+    srcs = ["model.cc"],
     copts = [],
     deps = ["//tensorflow_c:api"],
-    data = [":session_pb"],
+    data = [":model_pb"],
 )

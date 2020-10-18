@@ -4,3 +4,4 @@ bazel-*
 *.dockerfile
 *.pb
 !session.pb
+!model.pb

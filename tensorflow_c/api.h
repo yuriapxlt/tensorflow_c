@@ -32,7 +32,7 @@ public:
     template<typename T> void set_data(std::vector<T> new_data);
     template<typename T> void set_data(std::vector<T> new_data, const std::vector<int64_t>& new_shape);
     template<typename T> std::vector<T> get_data();
-	std::vector<int64_t> get_shape();
+    std::vector<int64_t> get_shape();
 private:
     TF_Tensor* val;
     TF_Output op;
